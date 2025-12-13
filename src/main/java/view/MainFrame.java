@@ -6,10 +6,6 @@ import java.awt.*;
 import controller.MainController;
 import model.WritingMode;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-
-
 //builds UI
 public class MainFrame extends JFrame {
 
@@ -32,9 +28,6 @@ public class MainFrame extends JFrame {
 
         JButton generateButton = new JButton("Generate");
         JLabel statusLabel = new JLabel("Ready");
-        JButton saveButton = new JButton("Save");
-        JButton loadButton = new JButton("Load");
-        JFileChooser chooser = new JFileChooser();
 
         JComboBox<WritingMode> writingModeComboBox = new JComboBox<>(WritingMode.values());
 
@@ -61,8 +54,6 @@ public class MainFrame extends JFrame {
         topPanel.add(generateButton);
         topPanel.add(statusLabel);
         topPanel.add(writingModeComboBox);
-        topPanel.add(saveButton);
-        topPanel.add(loadButton);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,  new JScrollPane(inputArea), new JScrollPane(outputArea)
         );
