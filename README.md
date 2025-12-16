@@ -10,12 +10,15 @@
 - Professional writing mode
 - Academic writing mode
 - Save/Load Sessions
+- Cancel a loading prompt
 
 ## Design Patterns
 - Strategy pattern
   - drop down allows for multiple different types of writing styles quickly
 - Factory pattern
   - Used to create and return the writing strategy based on the selected mode
+- Observer
+  - UI listens for text, status, or error changes, then updates accordingly
 
 
-## Demo: https://drive.google.com/file/d/1HIdN9UIzE19R3as890soTlXkyXOGiVke/view?usp=sharing
+## Demo: https://drive.google.com/file/d/15gHxg7lpU2Hgqrlrio-xSPhqQz1189Jr/view?usp=sharing
