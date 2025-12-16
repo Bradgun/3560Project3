@@ -7,6 +7,8 @@ import model.WritingMode;
 import strategy.Factory;
 import strategy.WritingStrategy;
 
+import java.time.Duration;
+
 //deals with requests and responses
 public class APIService {
     private final OpenAIClient client;
@@ -14,8 +16,11 @@ public class APIService {
 
     //initialize the client using API key from env var
     public APIService(String model) {
-        this.client = OpenAIOkHttpClient.fromEnv();
+
+        //System prevents query from running nonstop
+        OpenAIClient baseClient = OpenAIOkHttpClient.builder().fromEnv().timeout(Duration.ofSeconds(60)).build();
         this.model = model;
+        this.client = baseClient;
     }
 
     public String generate(WritingMode mode, String input) throws Exception {

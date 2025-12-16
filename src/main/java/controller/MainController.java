@@ -1,14 +1,26 @@
 package controller;
 import model.WritingMode;
+import model.AppModel;
 import javax.swing.SwingWorker;
 import service.APIService;
+import java.util.concurrent.CancellationException;
 
 //Controls actions between the UI and the API service
 public class MainController {
     private final APIService api = new APIService("gpt-4.1-mini");
 
+    //AppModel is used for Observer pattern
+    private final AppModel model;
+
+    //controller receives model for updates
+    public MainController(AppModel model) {
+        this.model = model;
+    }
+    //reference to background task so it could be cancelled
+    private SwingWorker<String, Void> worker;
+
     //Validates user input and forwards request to the API service
-    public String generate(WritingMode mode, String input) throws Exception{
+    private String generate(WritingMode mode, String input) throws Exception{
         if (input == null || input.trim().isEmpty()) {
             throw new IllegalArgumentException("Input is null or empty - Please Enter Text.");
         }
@@ -16,27 +28,52 @@ public class MainController {
     }
 
     //text generation happens in background so it doesn't freeze UI
-    public void generateInBackground(WritingMode mode, String input, java.util.function.Consumer<String> onSuccess, java.util.function.Consumer<String> onError) {
-        new SwingWorker<String, Void>() {
+    public void generateInBackground(WritingMode mode, String input) {
+        model.setErrorText(null);
+        model.setBusy(true);
+        model.setStatusText("Running");
 
-            //API call in background
+        worker = new SwingWorker<>() {
             @Override
             protected String doInBackground() throws Exception {
                 return generate(mode, input);
             }
 
-            //result once background thread is complete
             @Override
             protected void done() {
                 try {
-                    onSuccess.accept(get());
+                    if (isCancelled()) {
+                        model.setStatusText("Cancelled");
+                        return;
+                    }
+
+                    //successful response
+                    String result = get();
+                    model.setOutputText(result);
+                    model.setStatusText("Done");
+                }
+                catch (CancellationException e) {
+                    //cancelled task while it was running
+                    model.setStatusText("Cancelled");
                 }
                 catch (Exception e) {
-                    //for debugging
-                    e.printStackTrace();
-                    onError.accept(e.toString());
+                    //error is reported to the model
+                    model.setErrorText(e.getMessage());
+                    model.setStatusText("Error");
+                }
+                finally {
+                    //UI models go back up when busy = false
+                    model.setBusy(false);
                 }
             }
-        }.execute();
+        };
+        worker.execute();
+    }
+
+    //let user stop a running request
+    public void cancel() {
+        if (worker != null && !worker.isDone()) {
+            worker.cancel(true);
+        }
     }
 }

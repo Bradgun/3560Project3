@@ -9,8 +9,7 @@
 - Creative writing mode
 - Professional writing mode
 - Academic writing mode
-- Save/load not implemented
-  - Due to time constraints, I decided to skip on implementing this feature
+- Save/Load Sessions
 
 ## Design Patterns
 - Strategy pattern

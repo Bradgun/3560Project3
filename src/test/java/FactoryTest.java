@@ -1,22 +1,32 @@
 import model.WritingMode;
 import org.junit.jupiter.api.Test;
 import strategy.Factory;
+import strategy.WritingStrategy;
+import strategy.CreativeStrat;
+import strategy.ProfessionalStrat;
+import strategy.AcademicStrat;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FactoryTest {
     @Test
     void creativeStratReturn() {
-        assertNotNull(Factory.create(WritingMode.creative));
+        WritingStrategy s = Factory.create(WritingMode.creative);
+        assertNotNull(s);
+        assertInstanceOf(CreativeStrat.class, s);
     }
 
     @Test
     void professionalStratReturn() {
-        assertNotNull(Factory.create(WritingMode.professional));
+        WritingStrategy s = Factory.create(WritingMode.creative);
+        assertNotNull(s);
+        assertInstanceOf(ProfessionalStrat.class, s);
     }
 
     @Test
     void academicStratReturn() {
-        assertNotNull(Factory.create(WritingMode.academic));
+        WritingStrategy s = Factory.create(WritingMode.creative);
+        assertNotNull(s);
+        assertInstanceOf(AcademicStrat.class, s);
     }
 }
